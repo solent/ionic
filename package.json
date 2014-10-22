@@ -1,10 +1,10 @@
 {
   "name": "ionic",
   "private": false,
-  "version": "1.0.0-beta.4",
-  "codename": "antimony-antelope",
+  "version": "1.0.0-beta.4.1",
+  "codename": "solent-antimony-antelope",
   "repository": {
-    "url": "git://github.com/driftyco/ionic.git"
+    "url": "git://github.com/solent/ionic.git"
   },
   "devDependencies": {
     "karma": "~0.11.13",

@@ -60,8 +60,11 @@
     /**
      * Toggle the left menu to open 100%
      */
-    toggleLeft: function(shouldOpen) {
-      var openAmount = this.getOpenAmount();
+    toggleLeft: function(shouldOpen,width) {
+        if(width){
+            this.left.setWidth(  width);
+        }
+        var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount <= 0;
       }
@@ -76,7 +79,11 @@
     /**
      * Toggle the right menu to open 100%
      */
-    toggleRight: function(shouldOpen) {
+    toggleRight: function(shouldOpen,width) {
+
+        if(width){
+            this.right.setWidth(  width);
+        }
       var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount >= 0;
