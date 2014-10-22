@@ -49,9 +49,13 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   /**
    * Toggle the left menu to open 100%
    */
-  self.toggleLeft = function(shouldOpen) {
+  self.toggleLeft = function(shouldOpen, width) {
+
     if (isAsideExposed || !self.left.isEnabled) return;
-    var openAmount = self.getOpenAmount();
+      if(width){
+          this.left.setWidth(width);
+      }
+      var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
       shouldOpen = openAmount <= 0;
     }
@@ -66,9 +70,13 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   /**
    * Toggle the right menu to open 100%
    */
-  self.toggleRight = function(shouldOpen) {
+  self.toggleRight = function(shouldOpen, width) {
+
     if (isAsideExposed || !self.right.isEnabled) return;
-    var openAmount = self.getOpenAmount();
+      if(width){
+          this.right.setWidth(  width);
+      }
+      var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
       shouldOpen = openAmount >= 0;
     }
