@@ -6248,7 +6248,7 @@ function($timeout, $ionicGesture) {
         // Listen for taps on the content to close the menu
         function contentTap(e) {
           if(sideMenuCtrl.getOpenAmount() !== 0) {
-            sideMenuCtrl.close();
+            //sideMenuCtrl.close();
             e.gesture.srcEvent.preventDefault();
           }
         }
