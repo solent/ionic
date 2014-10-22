@@ -7374,10 +7374,7 @@ ionic.views.Slider = ionic.views.View.inherit({
     /**
      * Toggle the left menu to open 100%
      */
-    toggleLeft: function(shouldOpen,width) {
-        if(width){
-            this.left.setWidth(  width);
-        }
+    toggleLeft: function(shouldOpen) {
       var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount <= 0;
@@ -7393,11 +7390,8 @@ ionic.views.Slider = ionic.views.View.inherit({
     /**
      * Toggle the right menu to open 100%
      */
-    toggleRight: function(shouldOpen,width) {
-        if(width){
-            this.right.setWidth(  width);
-        }
-        var openAmount = this.getOpenAmount();
+    toggleRight: function(shouldOpen) {
+      var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount >= 0;
       }
