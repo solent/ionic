@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.11
+ * Ionic, v1.0.0-beta.11_1
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -19,7 +19,7 @@
 window.ionic = {
   controllers: {},
   views: {},
-  version: '1.0.0-beta.11'
+  version: '1.0.0-beta.11_1'
 };
 
 (function(window, document, ionic) {
@@ -7595,8 +7595,11 @@ ionic.views.Slider = ionic.views.View.inherit({
     /**
      * Toggle the left menu to open 100%
      */
-    toggleLeft: function(shouldOpen) {
-      var openAmount = this.getOpenAmount();
+    toggleLeft: function(shouldOpen, width) {
+        if(width){
+            this.left.setWidth(  width);
+        }
+        var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount <= 0;
       }
@@ -7611,8 +7614,12 @@ ionic.views.Slider = ionic.views.View.inherit({
     /**
      * Toggle the right menu to open 100%
      */
-    toggleRight: function(shouldOpen) {
-      var openAmount = this.getOpenAmount();
+    toggleRight: function(shouldOpen, width) {
+        if(width){
+            this.right.setWidth(  width);
+        }
+
+        var openAmount = this.getOpenAmount();
       if (arguments.length === 0) {
         shouldOpen = openAmount >= 0;
       }
