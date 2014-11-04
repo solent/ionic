@@ -62,7 +62,7 @@ function($timeout, $ionicGesture, $window) {
         // Listen for taps on the content to close the menu
         function onContentTap(gestureEvt) {
           if (sideMenuCtrl.getOpenAmount() !== 0) {
-            sideMenuCtrl.close();
+              sideMenuCtrl.toggleRight(true);
             gestureEvt.gesture.srcEvent.preventDefault();
             startCoord = null;
             primaryScrollAxis = null;

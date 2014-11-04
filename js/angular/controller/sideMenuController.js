@@ -52,8 +52,14 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   self.toggleLeft = function(shouldOpen, width) {
 
     if (isAsideExposed || !self.left.isEnabled) return;
-      if(width){
-          this.left.setWidth(width);
+      if(width ){
+          this.left.setWidth(  width);
+      }else{
+          if(this.left.getFullWidth() == this.left.getMaxWidth()){
+              self.close();return;
+          }else {
+              this.left.setWidth(this.left.getMaxWidth());
+          }
       }
       var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
@@ -73,8 +79,15 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   self.toggleRight = function(shouldOpen, width) {
 
     if (isAsideExposed || !self.right.isEnabled) return;
-      if(width){
+      if(width ){
           this.right.setWidth(  width);
+      }else{
+          if(this.right.getFullWidth() == this.right.getMaxWidth()){
+              self.close();
+              return;
+          }else {
+              this.right.setWidth(this.right.getMaxWidth());
+          }
       }
       var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
