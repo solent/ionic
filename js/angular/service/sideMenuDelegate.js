@@ -53,6 +53,13 @@ IonicModule
    * Default: Toggles the menu.
    */
   'toggleRight',
+    /**
+     * @ngdoc method
+     * @name $ionicSideMenuDelegate#getOpenAmount
+     * @description
+     * @return {float} The amount the side menu is open, either positive or negative for left (positive), or right (negative)
+     */
+        'getOpenAmount',
   /**
    * @ngdoc method
    * @name $ionicSideMenuDelegate#getOpenRatio

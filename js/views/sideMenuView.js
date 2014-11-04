@@ -11,10 +11,14 @@
       this.el = opts.el;
       this.isEnabled = (typeof opts.isEnabled === 'undefined') ? true : opts.isEnabled;
       this.setWidth(opts.width);
+        this.maxWidth = opts.width;
     },
     getFullWidth: function() {
       return this.width;
     },
+      getMaxWidth: function() {
+          return this.maxWidth;
+      },
     setWidth: function(width) {
       this.width = width;
       this.el.style.width = width + 'px';
