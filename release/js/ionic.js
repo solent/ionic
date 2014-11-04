@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13_1
+ * Ionic, v1.0.0-beta.13.3
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -18,7 +18,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-beta.13_1';
+window.ionic.version = '1.0.0-beta.13.3';
 
 (function(window, document, ionic) {
 
@@ -7026,10 +7026,14 @@ ionic.scroll = {
       this.el = opts.el;
       this.isEnabled = (typeof opts.isEnabled === 'undefined') ? true : opts.isEnabled;
       this.setWidth(opts.width);
+        this.maxWidth = opts.width;
     },
     getFullWidth: function() {
       return this.width;
     },
+      getMaxWidth: function() {
+          return this.maxWidth;
+      },
     setWidth: function(width) {
       this.width = width;
       this.el.style.width = width + 'px';

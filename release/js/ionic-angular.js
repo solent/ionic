@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13_1
+ * Ionic, v1.0.0-beta.13.3
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -3288,6 +3288,13 @@ IonicModule
    * Default: Toggles the menu.
    */
   'toggleRight',
+    /**
+     * @ngdoc method
+     * @name $ionicSideMenuDelegate#getOpenAmount
+     * @description
+     * @return {float} The amount the side menu is open, either positive or negative for left (positive), or right (negative)
+     */
+        'getOpenAmount',
   /**
    * @ngdoc method
    * @name $ionicSideMenuDelegate#getOpenRatio
@@ -4902,8 +4909,14 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   self.toggleLeft = function(shouldOpen, width) {
 
     if (isAsideExposed || !self.left.isEnabled) return;
-      if(width){
-          this.left.setWidth(width);
+      if(width ){
+          this.left.setWidth(  width);
+      }else{
+          if(this.left.getFullWidth() == this.left.getMaxWidth()){
+              self.close();return;
+          }else {
+              this.left.setWidth(this.left.getMaxWidth());
+          }
       }
       var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
@@ -4923,8 +4936,15 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   self.toggleRight = function(shouldOpen, width) {
 
     if (isAsideExposed || !self.right.isEnabled) return;
-      if(width){
+      if(width ){
           this.right.setWidth(  width);
+      }else{
+          if(this.right.getFullWidth() == this.right.getMaxWidth()){
+              self.close();
+              return;
+          }else {
+              this.right.setWidth(this.right.getMaxWidth());
+          }
       }
       var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
@@ -8778,7 +8798,7 @@ function($timeout, $ionicGesture, $window) {
         // Listen for taps on the content to close the menu
         function onContentTap(gestureEvt) {
           if (sideMenuCtrl.getOpenAmount() !== 0) {
-            sideMenuCtrl.close();
+              sideMenuCtrl.toggleRight(true);
             gestureEvt.gesture.srcEvent.preventDefault();
             startCoord = null;
             primaryScrollAxis = null;
