@@ -850,8 +850,8 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
           self.hintResize();
           self.scrollBy(
-            e.wheelDeltaX/self.options.wheelDampen,
-            -e.wheelDeltaY/self.options.wheelDampen
+            (e.wheelDeltaX || e.deltaX || 0) / self.options.wheelDampen,
+            (-e.wheelDeltaY || e.deltaY || 0) / self.options.wheelDampen
           );
 
           self.__fadeScrollbars('in');
@@ -866,6 +866,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       document.addEventListener("mousemove", self.mouseMove, false);
       document.addEventListener("mouseup", self.mouseUp, false);
       document.addEventListener('mousewheel', self.mouseWheel, false);
+      document.addEventListener('wheel', self.mouseWheel, false);
     }
   },
 
@@ -892,6 +893,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     document.removeEventListener("mousemove", self.mouseMove);
     document.removeEventListener("mouseup", self.mouseUp);
     document.removeEventListener('mousewheel', self.mouseWheel);
+    document.removeEventListener('wheel', self.mouseWheel);
 
     container.removeEventListener('scrollChildIntoView', self.scrollChildIntoView);
     container.removeEventListener('resetScrollView', self.resetScrollView);
@@ -972,7 +974,9 @@ ionic.views.Scroll = ionic.views.View.inherit({
         width = 0;
       }
       if (width !== self.__indicatorX.size) {
-        self.__indicatorX.indicator.style.width = width + 'px';
+        ionic.requestAnimationFrame(function(){
+          self.__indicatorX.indicator.style.width = width + 'px';
+        });
       }
       self.__indicatorX.size = width;
       self.__indicatorX.minScale = self.options.minScrollbarSizeX / width;
@@ -987,7 +991,9 @@ ionic.views.Scroll = ionic.views.View.inherit({
         height = 0;
       }
       if (height !== self.__indicatorY.size) {
-        self.__indicatorY.indicator.style.height = height + 'px';
+        ionic.requestAnimationFrame(function(){
+          self.__indicatorY && (self.__indicatorY.indicator.style.height = height + 'px');
+        });
       }
       self.__indicatorY.size = height;
       self.__indicatorY.minScale = self.options.minScrollbarSizeY / height;
@@ -1045,7 +1051,11 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
       }
 
-      self.__indicatorX.indicator.style[self.__transformProperty] = 'translate3d(' + x + 'px, 0, 0) scaleX(' + widthScale + ')';
+      var translate3dX = 'translate3d(' + x + 'px, 0, 0) scaleX(' + widthScale + ')';
+      if (self.__indicatorX.transformProp !== translate3dX) {
+        self.__indicatorX.indicator.style[self.__transformProperty] = translate3dX;
+        self.__indicatorX.transformProp = translate3dX;
+      }
     }
 
     if (self.__indicatorY) {
@@ -1091,10 +1101,10 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
       }
 
-      var translate3d = 'translate3d(0,' + y + 'px, 0) scaleY(' + heightScale + ')';
-      if (self.__indicatorY.transformProp !== translate3d) {
-        self.__indicatorY.indicator.style[self.__transformProperty] = translate3d;
-        self.__indicatorY.transformProp = translate3d;
+      var translate3dY = 'translate3d(0,' + y + 'px, 0) scaleY(' + heightScale + ')';
+      if (self.__indicatorY.transformProp !== translate3dY) {
+        self.__indicatorY.indicator.style[self.__transformProperty] = translate3dY;
+        self.__indicatorY.transformProp = translate3dY;
       }
     }
   },

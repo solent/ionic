@@ -5,10 +5,12 @@ IonicModule
   '$ionicSideMenuDelegate',
   '$ionicPlatform',
   '$ionicBody',
-function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
+  '$ionicHistory',
+function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $ionicHistory) {
   var self = this;
   var rightShowing, leftShowing, isDragging;
   var startX, lastX, offsetX, isAsideExposed;
+  var enableMenuWithBackViews = true;
 
   self.$scope = $scope;
 
@@ -17,6 +19,7 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
     self.right = options.right;
     self.setContent(options.content);
     self.dragThresholdX = options.dragThresholdX || 10;
+    $ionicHistory.registerHistory(self.$scope);
   };
 
   /**
@@ -98,6 +101,14 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
       self.openPercentage(0);
     } else {
       self.openPercentage(-100);
+    }
+  };
+
+  self.toggle = function(side) {
+    if (side == 'right') {
+      self.toggleRight();
+    } else {
+      self.toggleLeft();
     }
   };
 
@@ -275,6 +286,13 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
     }
   };
 
+  self.enableMenuWithBackViews = function(val) {
+    if (arguments.length) {
+      enableMenuWithBackViews = !!val;
+    }
+    return enableMenuWithBackViews;
+  };
+
   self.isAsideExposed = function() {
     return !!isAsideExposed;
   };
@@ -371,9 +389,17 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
       startX <= self.edgeThreshold ||
       startX >= self.content.element.offsetWidth - self.edgeThreshold;
 
+    var backView = $ionicHistory.backView();
+    var menuEnabled = enableMenuWithBackViews ? true : !backView;
+    if (!menuEnabled) {
+      var currentView = $ionicHistory.currentView() || {};
+      return backView.historyId !== currentView.historyId;
+    }
+
     return ($scope.dragContent || self.isOpen()) &&
       dragIsWithinBounds &&
       !e.gesture.srcEvent.defaultPrevented &&
+      menuEnabled &&
       !e.target.tagName.match(/input|textarea|select|object|embed/i) &&
       !e.target.isContentEditable &&
       !(e.target.dataset ? e.target.dataset.preventScroll : e.target.getAttribute('data-prevent-scroll') == 'true');
@@ -397,7 +423,9 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody) {
   });
 
   var deregisterInstance = $ionicSideMenuDelegate._registerInstance(
-    self, $attrs.delegateHandle
+    self, $attrs.delegateHandle, function() {
+      return $ionicHistory.isActiveScope($scope);
+    }
   );
 
   $scope.$on('$destroy', function() {

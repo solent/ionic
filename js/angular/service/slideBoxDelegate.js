@@ -91,16 +91,6 @@ IonicModule
   'count',
   /**
    * @ngdoc method
-   * @name $ionicSlideBoxDelegate#update
-   * @description Causes the slidebox to re-scan all of the child slide
-   * elements and reorganize itself again. This will rarely be needed.
-   * You only need to call update if you are moving slides around in the DOM
-   * (for example, ng-repeat moving an element from the middle to the end of
-   * the list).
-   */
-  'update',
-  /**
-   * @ngdoc method
    * @name $ionicSlideBoxDelegate#$getByHandle
    * @param {string} handle
    * @returns `delegateInstance` A delegate instance that controls only the
@@ -109,5 +99,14 @@ IonicModule
    *
    * Example: `$ionicSlideBoxDelegate.$getByHandle('my-handle').select(0);`
    */
+
+   // DEPRECATED, as of v1.0.0-beta14 -------
+   'update',
+   'currentIndex',
+   'slide',
+   'slidesCount',
+   'stop',
+   'start'
+   // END DEPRECATED -------
 ]));
 

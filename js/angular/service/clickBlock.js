@@ -4,33 +4,36 @@ IonicModule
   '$ionicBody',
   '$timeout',
 function($document, $ionicBody, $timeout) {
-  var fallbackTimer;
+  var fallbackTimer, isAttached;
+  var CSS_HIDE = 'click-block-hide';
+  var pendingShow;
 
   var cb = $document[0].createElement('div');
   cb.className = 'click-block';
 
   return {
-    show: function() {
+    show: function(autoExpire) {
+      pendingShow = true;
       // cancel the fallback timer
-      $timeout.cancel( fallbackTimer );
+      $timeout.cancel(fallbackTimer);
 
-      if(cb.parentElement) {
-        cb.classList.remove('hide');
-      } else {
-        $ionicBody.append(cb);
-      }
-      fallbackTimer = $timeout(function(){
-        cb.classList.add('hide');
-      }, 500);
+      ionic.requestAnimationFrame(function() {
+        if (pendingShow) {
+          if (isAttached) {
+            cb.classList.remove(CSS_HIDE);
+          } else {
+            $ionicBody.append(cb);
+            isAttached = true;
+          }
+        }
+      });
+
+      fallbackTimer = $timeout(this.hide, autoExpire || 310);
     },
     hide: function() {
-      // cancel the fallback timer
-      $timeout.cancel( fallbackTimer );
-
-      // should be a minimum time it should hide
-      ionic.requestAnimationFrame(function(){
-        cb.classList.add('hide');
-      });
+      pendingShow = false;
+      $timeout.cancel(fallbackTimer);
+      cb.classList.add(CSS_HIDE);
     }
   };
 }]);

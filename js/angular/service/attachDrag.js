@@ -12,7 +12,7 @@ IonicModule
       getDistance: function() { return opts.element.prop('offsetWidth'); },
       onDragStart: angular.noop,
       onDrag: angular.noop,
-      onDragEnd: angular.noop,
+      onDragEnd: angular.noop
     }, options);
 
     var dragStartGesture = ionic.onGesture('dragstart', handleDragStart, element[0]);
@@ -25,19 +25,24 @@ IonicModule
       ionic.offGesture(dragEndGesture, 'dragend', handleDragEnd);
     });
 
+    var isDragging = false;
     element.on('touchmove pointermove mousemove', function(ev) {
-      if (dragState && dragState.dragging) ev.preventDefault();
+      if (isDragging) ev.preventDefault();
+    });
+    element.on('touchend mouseup mouseleave', function(ev) {
+      isDragging = false;
     });
 
     var dragState;
     function handleDragStart(ev) {
       if (dragState) return;
-      dragState = {
-        startX: ev.gesture.center.pageX,
-        startY: ev.gesture.center.pageY,
-        distance: opts.getDistance()
-      };
-      opts.onDragStart();
+      if (opts.onDragStart() !== false) {
+        dragState = {
+          startX: ev.gesture.center.pageX,
+          startY: ev.gesture.center.pageY,
+          distance: opts.getDistance()
+        };
+      }
     }
     function handleDrag(ev) {
       if (!dragState) return;
@@ -49,7 +54,9 @@ IonicModule
         handleDragEnd(ev);
         return;
       }
-      dragState.dragging = true;
+      if (Math.abs(deltaX) > Math.abs(deltaY) * 2) {
+        isDragging = true;
+      }
 
       var percent = getDragPercent(ev.gesture.center.pageX);
       opts.onDrag(percent);
