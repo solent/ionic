@@ -372,8 +372,10 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
     }
   }
 
-  function onDragEnd(percent, velocity) {
-    var isSuccess = Math.abs(percent) > 0.5 || velocity > SLIDE_SUCCESS_VELOCITY;
+  function onDragEnd(percent, velocity, percenty, velocityy) {
+    var moreOnX = (Math.abs(percent) > 0.5 && Math.abs(percent) > 3* Math.abs(percenty)  ),
+        fasterOnX = ( velocity > SLIDE_SUCCESS_VELOCITY &&  Math.abs(percent) > 0.25 && Math.abs( percenty ) <0.25);
+    var isSuccess = moreOnX || fasterOnX;
 
     if (isSuccess) {
       var distanceRemaining = (1 - Math.abs(percent)) * dragWidth;

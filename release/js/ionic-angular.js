@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13.3
+ * Ionic, v1.0.0-beta.13.4
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -382,13 +382,19 @@ IonicModule
     function handleDragEnd(ev) {
       if (!dragState) return;
       var percent = getDragPercent(ev.gesture.center.pageX);
-      options.onDragEnd(percent, ev.gesture.velocityX);
+      options.onDragEnd(percent, ev.gesture.velocityX, getDragPercentY(ev.gesture.center.pageY), ev.gesture.velocityY );
 
       dragState = null;
     }
 
     function getDragPercent(x) {
       var delta = dragState.startX - x;
+      var percent = delta / dragState.distance;
+      return percent;
+    }
+
+    function getDragPercentY(y) {
+      var delta = dragState.startY - y;
       var percent = delta / dragState.distance;
       return percent;
     }
@@ -7543,8 +7549,10 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
     }
   }
 
-  function onDragEnd(percent, velocity) {
-    var isSuccess = Math.abs(percent) > 0.5 || velocity > SLIDE_SUCCESS_VELOCITY;
+  function onDragEnd(percent, velocity, percenty, velocityy) {
+    var moreOnX = (Math.abs(percent) > 0.5 && Math.abs(percent) > 3* Math.abs(percenty)  ),
+        fasterOnX = ( velocity > SLIDE_SUCCESS_VELOCITY &&  Math.abs(percent) > 0.25 && Math.abs( percenty ) <0.25);
+    var isSuccess = moreOnX || fasterOnX;
 
     if (isSuccess) {
       var distanceRemaining = (1 - Math.abs(percent)) * dragWidth;
