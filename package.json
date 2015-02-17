@@ -1,7 +1,7 @@
 {
   "name": "ionic",
   "private": false,
-  "version": "1.0.0-beta.13.5",
+  "version": "1.0.0-beta.13.6",
   "codename": "solent-lanthanum-leopard",
   "repository": {
     "url": "git://github.com/solent/ionic.git"
