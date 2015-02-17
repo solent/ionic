@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13.5
+ * Ionic, v1.0.0-beta.13.6
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -5287,6 +5287,22 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
 
   return ionicViewSwitcher;
 
+}]);
+
+/**
+ * @private
+ * Parts of Ionic requires that $scope data is attached to the element.
+ * We do not want to disable adding $scope data to the $element when
+ * $compileProvider.debugInfoEnabled(false) is used.
+ */
+IonicModule.config(['$provide', function($provide) {
+  $provide.decorator('$compile', ['$delegate', function($compile) {
+     $compile.$$addScopeInfo = function $$addScopeInfo($element, scope, isolated, noTemplate) {
+       var dataName = isolated ? (noTemplate ? '$isolateScopeNoTemplate' : '$isolateScope') : '$scope';
+       $element.data(dataName, scope);
+     };
+     return $compile;
+  }]);
 }]);
 
 /**
@@ -11388,6 +11404,9 @@ function($parse) {
     });
 
     function onSlideStart(ev, index) {
+        if(!index){
+            index = 0;
+        }
       watchSelectedAction(index);
     }
 

@@ -79,6 +79,9 @@ function($parse) {
     });
 
     function onSlideStart(ev, index) {
+        if(!index){
+            index = 0;
+        }
       watchSelectedAction(index);
     }
 
