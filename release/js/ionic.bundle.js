@@ -9,7 +9,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13.6
+ * Ionic, v1.0.0-beta.13.7
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -25,7 +25,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-beta.13.6';
+window.ionic.version = '1.0.0-beta.13.7';
 
 (function(window, document, ionic) {
 
@@ -39066,7 +39066,7 @@ angular.module('ui.router.compat')
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13.6
+ * Ionic, v1.0.0-beta.13.7
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -41457,7 +41457,7 @@ IonicModule
 
     function setStyles(ele, opacity, x) {
       var css = {};
-      css[ionic.CSS.TRANSITION_DURATION] = shouldAnimate ? '' : 0;
+      css[ionic.CSS.TRANSITION_DURATION] = shouldAnimate ? undefined : 0;
       css.opacity = opacity;
       css[ionic.CSS.TRANSFORM] = 'translate3d(' + x + '%,0,0)';
       ionic.DomUtil.cachedStyles(ele, css);
@@ -44355,22 +44355,6 @@ function($timeout, $document, $q, $ionicClickBlock, $ionicConfig, $ionicNavBarDe
 
 /**
  * @private
- * Parts of Ionic requires that $scope data is attached to the element.
- * We do not want to disable adding $scope data to the $element when
- * $compileProvider.debugInfoEnabled(false) is used.
- */
-IonicModule.config(['$provide', function($provide) {
-  $provide.decorator('$compile', ['$delegate', function($compile) {
-     $compile.$$addScopeInfo = function $$addScopeInfo($element, scope, isolated, noTemplate) {
-       var dataName = isolated ? (noTemplate ? '$isolateScopeNoTemplate' : '$isolateScope') : '$scope';
-       $element.data(dataName, scope);
-     };
-     return $compile;
-  }]);
-}]);
-
-/**
- * @private
  */
 IonicModule.config([
   '$provide',
@@ -46521,24 +46505,34 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
         setDisplayedSlides(self.previous(), selectedIndex, self.next());
       }
 
-      container.css(ionic.CSS.TRANSITION_DURATION, duration + 'ms');
-      // Wait for transitionDuration css to apply...
-      ionic.requestAnimationFrame(function() {
-        container.css(ionic.CSS.TRANSFORM, 'translate3d(' + translatePx + 'px,0,0)');
-        $timeout(finishSliding, duration, false);
-      });
+        if ( duration && duration > 0 && !ionic.transition.isActive ) {
+            container.css(ionic.CSS.TRANSITION_DURATION, duration + 'ms');
+
+            // Wait for transitionDuration css to apply...
+            ionic.requestAnimationFrame(function() {
+                container.css(ionic.CSS.TRANSFORM, 'translate3d(' + translatePx + 'px,0,0)');
+                $timeout(finishSliding, duration, false);
+            });
+        } else {
+            finishSliding();
+        }
     }
 
     return deferred.promise;
 
-    function finishSliding() {
-      container.css(ionic.CSS.TRANSITION_DURATION, '0ms');
-      // Wait for transitionDuration css to apply...
-      ionic.requestAnimationFrame(function() {
-        setSelectedSlide(newIndex);
-        deferred.resolve();
-      });
-    }
+      function finishSliding() {
+          if ( duration && duration > 0 && !ionic.transition.isActive ) {
+              container.css(ionic.CSS.TRANSITION_DURATION, '0ms');
+              // Wait for transitionDuration css to apply...
+              ionic.requestAnimationFrame(function() {
+                  setSelectedSlide(newIndex);
+                  deferred.resolve();
+              });
+          } else {
+              setSelectedSlide(newIndex);
+              deferred.resolve();
+          }
+      }
   }
 
   function setSelectedSlide(newIndex) {
@@ -46565,7 +46559,7 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
       oldSlide = currentDisplayed[i];
       if (oldSlide && newDisplayed.indexOf(oldSlide) === -1) {
         oldSlide.removeAttribute('slide-display');
-        ionic.Utils.disconnectScope( jqLite(oldSlide).data('$ionSlideScope') );
+        //ionic.Utils.disconnectScope( jqLite(oldSlide).data('$ionSlideScope') );
       }
     }
 
@@ -46575,12 +46569,12 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
 
     function setDisplay(slide, display) {
       if (!slide) return;
-      var slideScope = jqLite(slide).data('$ionSlideScope');
-      if (slideScope) {
-        ionic.Utils.reconnectScope(slideScope);
-        // Digest the slide so it updates before being shown
-        if (!$rootScope.$$phase) slideScope.$digest();
-      }
+//      var slideScope = jqLite(slide).data('$ionSlideScope');
+//      if (slideScope) {
+//        ionic.Utils.reconnectScope(slideScope);
+//        // Digest the slide so it updates before being shown
+//        if (!$rootScope.$$phase) slideScope.$digest();
+//      }
       slide.setAttribute('slide-display', display);
     }
 
@@ -46636,7 +46630,7 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
 
     if (isSuccess) {
       var distanceRemaining = (1 - Math.abs(percent)) * dragWidth;
-      var transitionDuration = Math.min((distanceRemaining / velocity) - 34, SLIDE_TRANSITION_DURATION);
+      var transitionDuration = Math.max(0, Math.min((distanceRemaining / velocity) - 34, SLIDE_TRANSITION_DURATION));
 
       self.select(function getIndex() {
         // This will be called once this dragend is reached in the select queue.
@@ -50249,7 +50243,7 @@ IonicModule
     slideBoxCtrl.onAddSlide();
 
     var childScope = scope.$new();
-    element.data('$ionSlideScope', childScope);
+//    element.data('$ionSlideScope', childScope);
 
     // Disconnect by default, will be reconnected if shown
     // ionic.Utils.disconnectScope(childScope);

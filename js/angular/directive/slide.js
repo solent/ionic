@@ -40,7 +40,7 @@ IonicModule
     slideBoxCtrl.onAddSlide();
 
     var childScope = scope.$new();
-    element.data('$ionSlideScope', childScope);
+//    element.data('$ionSlideScope', childScope);
 
     // Disconnect by default, will be reconnected if shown
     // ionic.Utils.disconnectScope(childScope);

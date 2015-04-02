@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.13.7
+ * Ionic, v1.0.0-beta.13.5
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -2737,8 +2737,8 @@ function($ionicLoadingConfig, $ionicBody, $ionicTemplateLoader, $ionicBackdrop, 
             $ionicTemplateLoader.load(options.templateUrl) :
             //options.content: deprecated
             $q.when(options.template || options.content || '');
-            
-        
+
+
           self.scope = options.scope || self.scope;
 
 
@@ -2864,7 +2864,7 @@ function($ionicLoadingConfig, $ionicBody, $ionicTemplateLoader, $ionicBackdrop, 
  *
  * - This example assumes your modal is in your main index file or another template file. If it is in its own
  * template file, remove the script tags and call it by file name.
- * 
+ *
  * @usage
  * ```html
  * <script id="my-modal.html" type="text/ng-template">
@@ -7441,34 +7441,34 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
         setDisplayedSlides(self.previous(), selectedIndex, self.next());
       }
 
-        if ( duration && duration > 0 && !ionic.transition.isActive ) {
-            container.css(ionic.CSS.TRANSITION_DURATION, duration + 'ms');
+      if ( duration && duration > 0 && !ionic.transition.isActive ) {
+          container.css(ionic.CSS.TRANSITION_DURATION, duration + 'ms');
 
-            // Wait for transitionDuration css to apply...
-            ionic.requestAnimationFrame(function() {
-                container.css(ionic.CSS.TRANSFORM, 'translate3d(' + translatePx + 'px,0,0)');
-                $timeout(finishSliding, duration, false);
-            });
-        } else {
-            finishSliding();
-        }
+          // Wait for transitionDuration css to apply...
+          ionic.requestAnimationFrame(function() {
+            container.css(ionic.CSS.TRANSFORM, 'translate3d(' + translatePx + 'px,0,0)');
+            $timeout(finishSliding, duration, false);
+          });
+      } else {
+          finishSliding();
+      }
     }
 
     return deferred.promise;
 
-      function finishSliding() {
-          if ( duration && duration > 0 && !ionic.transition.isActive ) {
-              container.css(ionic.CSS.TRANSITION_DURATION, '0ms');
-              // Wait for transitionDuration css to apply...
-              ionic.requestAnimationFrame(function() {
-                  setSelectedSlide(newIndex);
-                  deferred.resolve();
-              });
-          } else {
-              setSelectedSlide(newIndex);
-              deferred.resolve();
-          }
+    function finishSliding() {
+      if ( duration && duration > 0 && !ionic.transition.isActive ) {
+          container.css(ionic.CSS.TRANSITION_DURATION, '0ms');
+          // Wait for transitionDuration css to apply...
+          ionic.requestAnimationFrame(function() {
+            setSelectedSlide(newIndex);
+            deferred.resolve();
+          });
+      } else {
+        setSelectedSlide(newIndex);
+        deferred.resolve();
       }
+    }
   }
 
   function setSelectedSlide(newIndex) {
@@ -7505,12 +7505,12 @@ function(scope, element, $log, $document, $$q, $timeout, $interval, $$ionicAttac
 
     function setDisplay(slide, display) {
       if (!slide) return;
-//      var slideScope = jqLite(slide).data('$ionSlideScope');
-//      if (slideScope) {
-//        ionic.Utils.reconnectScope(slideScope);
-//        // Digest the slide so it updates before being shown
-//        if (!$rootScope.$$phase) slideScope.$digest();
-//      }
+      //var slideScope = jqLite(slide).data('$ionSlideScope');
+      //if (slideScope) {
+      //  //ionic.Utils.reconnectScope(slideScope);
+      //  // Digest the slide so it updates before being shown
+      //  if (!$rootScope.$$phase) slideScope.$digest();
+      //}
       slide.setAttribute('slide-display', display);
     }
 
@@ -10493,7 +10493,7 @@ IonicModule
  * <ion-radio ng-model="choice" ng-value="'B'">Choose B</ion-radio>
  * <ion-radio ng-model="choice" ng-value="'C'">Choose C</ion-radio>
  * ```
- * 
+ *
  * @param {string=} name The name of the radio input.
  * @param {expression=} value The value of the radio input.
  * @param {boolean=} disabled The state of the radio input.
@@ -11179,7 +11179,7 @@ IonicModule
     slideBoxCtrl.onAddSlide();
 
     var childScope = scope.$new();
-//    element.data('$ionSlideScope', childScope);
+    //element.data('$ionSlideScope', childScope);
 
     // Disconnect by default, will be reconnected if shown
     // ionic.Utils.disconnectScope(childScope);
@@ -11398,9 +11398,6 @@ function($parse) {
     });
 
     function onSlideStart(ev, index) {
-        if(!index){
-            index = 0;
-        }
       watchSelectedAction(index);
     }
 
